@@ -1,0 +1,6 @@
+INDEX VERSION 1.4+/Users/xfchu/sdev/projects/eventRecommendation/Event-Recommendation-Site/backend/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+68906266.index
+3781314746.index
+3286865725.index
+2077302490.index
+3026521838.index
