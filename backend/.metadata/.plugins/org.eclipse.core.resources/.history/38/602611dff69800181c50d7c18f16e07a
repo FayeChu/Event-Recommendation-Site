@@ -1,0 +1,9 @@
+package external;
+
+public class TicketMasterAPI {
+	
+	private static final String URL = "https://app.ticketmaster.com/discovery/v2/";
+	private static final String DEFAULT_KEYWORD = "";
+	private static final String API_KEY= "JRfZQGvNL3GBjrJnWknalJCXTGxvoKHV";
+
+}

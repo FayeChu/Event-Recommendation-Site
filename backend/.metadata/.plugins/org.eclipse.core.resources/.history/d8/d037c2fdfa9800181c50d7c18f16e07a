@@ -1,0 +1,45 @@
+package external;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class TicketMasterAPI {
+	
+	private static final String URL = "https://app.ticketmaster.com/discovery/v2/events.json";
+	private static final String DEFAULT_KEYWORD = "";
+	private static final String API_KEY= "JRfZQGvNL3GBjrJnWknalJCXTGxvoKHV";
+	
+	public JSONArray search(double lat, double lon, String keyword) {
+		// Encode keyword in URl since it may contain special characters
+		if (keyword == null) {
+			keyword = DEFAULT_KEYWORD;
+		}
+		try {
+			keyword = java.net.URLEncoder.encode(keyword, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Convert lat/lon to geo hash
+		String geoHash = GeoHash.encodeGeohash(lat, lon, 8);
+		
+		// Make URL "apikey=12345&geoPaint=abcd&keyword=music&radius=50"
+		String query = String.format("apikey=%s", args);
+		
+		
+		return new JSONArray();
+	}
+	
+	public void queryAPI(double lat, double lon) {
+		JSONArray events = search(lat, lon, null);
+		try {
+			for (int i = 0; i < events.length(); ++i) {
+				JSONObject event = events.getJSONObject(i);
+				System.out.println(event);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
