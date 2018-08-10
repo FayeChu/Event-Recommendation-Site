@@ -1,0 +1,30 @@
+(function() {
+	var user_id = '1111';
+	var user_fullname = 'John Smith';
+	var lng = -122.08;
+	var lat = 37.38;
+	
+	init();
+	
+	function init() {
+		initGeoLocation();
+	}
+	
+	function initGeoLocation() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(onPositionUpdated,
+					onLoadPositionFailed, {
+						maximumAge : 60000
+					});
+			showLoadingMessage('Retrieving your location...');
+		} else {
+			onLoadPositionFailed();
+		}
+		
+		function onLoadPositionFailed() {
+			console.log('location error');
+		}
+	}
+	
+})()
+

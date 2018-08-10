@@ -1,0 +1,61 @@
+(function() {
+	var user_id = '1111';
+	var user_fullname = 'John Smith';
+	var lng = -122.08;
+	var lat = 37.38;
+	
+	init();
+	
+	function init() {
+		initGeoLocation();
+	}
+	
+	function initGeoLocation() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(onPositionUpdated,
+					onLoadPositionFailed, {
+						maximumAge : 60000
+					});
+			showLoadingMessage('Retrieving your location...');
+		} else {
+			onLoadPositionFailed();
+		}
+		
+		
+		function onPositionUpdated(position) {
+			lat = position.coords.latitude;
+			lng = position.coords.longitude;
+			
+			loadNearByItems();
+		}
+		
+		function onLoadPositionFailed() {
+			console.log('location error');
+		}
+		
+		function showLoadingMessage(msg) {
+			var itemList = document.getElementById('item-list');
+			itemList.innerHTML = '<p class="notice"><i class="fa fa-spinner fa-spin"></i> '
+				+ msg + '</p>';
+		}
+		
+		function loadNearByItems() {
+			console.log('loading nearby items');
+			
+			// active button
+			activeBtn();
+			
+		}
+		
+		function activeBtn(btnId) {
+			var btns = document.getElementsByClassName('main-nav-btn');
+			
+			//deactivate all navigationbuttons
+			for (var i = 0; i < btns.length, i++) {
+				btns[i].className = btn[i].className.replace(/\bactive\b/, '');
+			}
+		}
+	}
+	
+})()
+
