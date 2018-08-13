@@ -2,6 +2,7 @@ package rpc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import entity.Item;
+import external.TicketMasterAPI;
 
 /**
  * Servlet implementation class SearchItem
@@ -31,19 +35,28 @@ public class SearchItem extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    // http://localhost:8080/Jupiter/search?lat=37.38&lon=-122.08  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		double lat = Double.parseDouble(request.getParameter("lat"));
+		double lon = Double.parseDouble(request.getParameter("lon"));
 		
-		JSONObject obj = new JSONObject();
+		String keyWord = request.getParameter("term");
+		
+		TicketMasterAPI ticketMasterAPI = new TicketMasterAPI();
+		List<Item> items = ticketMasterAPI.search(lat, lon, keyWord);
+		
+		JSONArray array = new JSONArray();
 		
 		try {
-			obj.put("username", "abcd");
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			for (Item item : items) {
+				JSONObject object = item.toJSONObject();
+				array.put(object);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		RpcHelper.writeJsonObject(response, obj);
+		RpcHelper.writeJSONArray(response, array);
 	}
 
 	/**
