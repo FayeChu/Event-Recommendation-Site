@@ -41,7 +41,7 @@ public class RecommendItem extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		RpcHelper.writeJsonArray(response, array);
+		RpcHelper.writeJSONArray(response, array);
 	}
 
 	/**
