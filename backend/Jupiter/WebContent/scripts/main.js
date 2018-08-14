@@ -13,13 +13,74 @@
      */
     function init() {
         // Register event listeners
+    	$('login-btn').addEventListener('click', login);
         $('nearby-btn').addEventListener('click', loadNearbyItems);
         $('fav-btn').addEventListener('click', loadFavoriteItems);
         $('recommend-btn').addEventListener('click', loadRecommendedItems);
 
+//        var welcomeMsg = $('welcome-msg');
+//        welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
+//        initGeoLocation();
+        validateSession();
+    }
+    
+    /**
+     * Session
+     */
+    function validateSession() {
+        // The request parameters
+        var url = 'http://34.222.78.188/TitanAuth/login';
+        var req = JSON.stringify({});
+
+        // display loading message
+        showLoadingMessage('Validating session...');
+
+        // make AJAX call
+        ajax('GET', url, req,
+            // session is still valid
+            function(res) {
+                var result = JSON.parse(res);
+
+                if (result.status === 'OK') {
+                    onSessionValid(result);
+                }
+            }, onSessionInvalid);
+    }
+
+    function onSessionValid(result) {
+        user_id = result.user_id;
+        user_fullname = result.name;
+
+        var loginForm = $('login-form');
+        var itemNav = $('item-nav');
+        var itemList = $('item-list');
+        var avatar = $('avatar');
         var welcomeMsg = $('welcome-msg');
+
         welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
+
+        showElement(itemNav);
+        showElement(itemList);
+        showElement(avatar);
+        showElement(welcomeMsg);
+        hideElement(loginForm);
+
         initGeoLocation();
+    }
+
+    function onSessionInvalid() {
+        var loginForm = $('login-form');
+        var itemNav = $('item-nav');
+        var itemList = $('item-list');
+        var avatar = $('avatar');
+        var welcomeMsg = $('welcome-msg');
+
+        hideElement(itemNav);
+        hideElement(itemList);
+        hideElement(avatar);
+        hideElement(welcomeMsg);
+
+        showElement(loginForm);
     }
 
     function initGeoLocation() {
@@ -62,6 +123,50 @@
             loadNearbyItems();
         });
     }
+    
+    // -----------------------------------
+    // Login
+    // -----------------------------------
+
+    function login() {
+        var username = $('username').value;
+        var password = $('password').value;
+//        password = md5(username + md5(password));
+        console.log(username + " " + password);
+
+        // The request parameters
+        var url = 'http://34.211.21.63/EventAuth/login';
+        var req = JSON.stringify({
+            user_id : username,
+            password : password,
+        });
+
+        ajax('POST', url, req,
+            // successful callback
+            function(res) {
+                var result = JSON.parse(res);
+
+                // successfully logged in
+                if (result.status === 'OK') {
+                    onSessionValid(result);
+                }
+            },
+
+            // error
+            function() {
+                showLoginError();
+            },
+            true);
+    }
+
+    function showLoginError() {
+        $('login-error').innerHTML = 'Invalid username or password';
+    }
+
+    function clearLoginError() {
+        $('login-error').innerHTML = '';
+    }
+    
 
     // -----------------------------------
     // Helper Functions
