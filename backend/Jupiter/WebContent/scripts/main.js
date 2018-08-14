@@ -1,8 +1,8 @@
 (function() {
 	var user_id = '1111';
-	var user_fullname = 'John Smith';
-	var lng = -122.08;
-	var lat = 37.38;
+//	var user_fullname = 'John Smith';
+//	var lng = -122.08;
+//	var lat = 37.38;
 	
 	init();
 	
@@ -12,6 +12,7 @@
 		initGeoLocation();
 	}
 
+	// get geoLocation
 	function initGeoLocation() {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(onPositionUpdated,
@@ -54,6 +55,7 @@
 				+ msg + '</p>';
 	}
 
+	// get nearby events
 	function loadNearbyItems() {
 		console.log('loading nearby events');
 		
@@ -67,9 +69,10 @@
 		
 		console.log(req);
 		
-		//display loading message
+		// Display loading message
 		console.log("Loading nearby events...");
 		
+		// Ajax
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url + '?' + params, true);
 		xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
@@ -94,8 +97,7 @@
 		xhr.onerror = function() {
 			console.error("The request couldn't be completed");
 			showErrorMessage("The request couldn't be completed");
-		}
-		
+		}	
 	}
 
 	function activeBtn(btnId) {
@@ -133,7 +135,7 @@
 		li.dataset.favorite = item.favorite;
 		
 		// item image
-		var image = document.cereateElement('img');
+		var image = document.createElement('img');
 		if (item.image_url) {
 			image.setAttribute('src', item.image_url);
 		} else {
@@ -180,7 +182,6 @@
 		li.appendChild(favLink);
 
 		itemList.appendChild(li);
-
 	}
 
 	function getLocationFromIP() {

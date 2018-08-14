@@ -1,0 +1,12 @@
+package db.mysql;
+
+public class MySQLTableCreation {
+	// Run this as Java application to reset db schema
+	public static void main(String[] args) {
+		try {
+			// step 1: Connect to MySQL
+			System.out.println("Connecting to " + MySQLDBUtil.URL);
+			Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+		}
+	}
+}

@@ -275,8 +275,8 @@ public class TicketMasterAPI {
 	 */
 	
 	public static void main(String[] args) {
-		TicketMasterAPI tmApi = new TicketMasterAPI();
-		tmApi.queryAPI(29.682684, -95.295410);
+//		TicketMasterAPI tmApi = new TicketMasterAPI();
+//		tmApi.queryAPI(29.682684, -95.295410);
 	}
 
 }

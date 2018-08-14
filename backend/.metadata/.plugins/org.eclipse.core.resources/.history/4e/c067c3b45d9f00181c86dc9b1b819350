@@ -1,0 +1,53 @@
+package db.mysql;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.DriverManager;
+
+public class MySQLTableCreation {
+	// Run this as Java application to reset db schema
+	public static void main(String[] args) {
+		try {
+			// step 1: Connect to MySQL
+			System.out.println("Connecting to " + MySQLDBUtil.URL);
+			Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+			Connection conn = DriverManager.getConnection(MySQLDBUtil.URL);
+			
+			if (conn == null) {
+				return;
+			}
+			
+			// step 2: Drop tables in case they exist
+			// delete foreign key table first
+			Statement stmt = conn.createStatement();
+			String sql = "DROP TABLE IF EXISTS categories";
+			stmt.executeUpdate(sql);
+			
+			sql = "DROP TABLE IF EXISTS history";
+			stmt.executeUpdate(sql);
+			
+			sql = "DROP TABLE IF EXISTS items";
+			stmt.executeUpdate(sql);
+			
+			sql = "DROP TABLE IF EXISTS users";
+			stmt.executeUpdate(sql);
+
+			// Step 3: Create new tables
+			sql = "CREATE TABLE items ("
+					+ "item_id VARCHAR(255) NOT NULL," 
+					+ "name VARCHAR(255),"
+					+ "rating FLOAT,"
+					+ "address VARCHAR(255),"
+					+ "image_url VARCHAR(255),"
+					+ "url VARCHAR(255),"
+					+ "distance FLOAT,"
+					+ "PRIMARY_KEY(item_id)"
+					+ ")";
+			
+			System.out.println("Import done successfully");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
