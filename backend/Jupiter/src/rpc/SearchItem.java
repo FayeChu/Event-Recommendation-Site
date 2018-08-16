@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import db.DBConnection;
+import db.DBConnectionFactory;
 import entity.Item;
 import external.TicketMasterAPI;
 
@@ -40,23 +42,39 @@ public class SearchItem extends HttpServlet {
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 		
-		String keyWord = request.getParameter("term");
+		String term = request.getParameter("term");
 		
-		TicketMasterAPI ticketMasterAPI = new TicketMasterAPI();
-		List<Item> items = ticketMasterAPI.search(lat, lon, keyWord);
-		
-		JSONArray array = new JSONArray();
-		
+		// Open db connection
+		DBConnection connection = DBConnectionFactory.getConnection();
 		try {
+			List<Item> items = connection.searchItems(lat, lon, term);
+			
+			JSONArray array = new JSONArray();
 			for (Item item : items) {
-				JSONObject object = item.toJSONObject();
-				array.put(object);
+				array.put(item.toJSONObject());
 			}
+			
+			RpcHelper.writeJSONArray(response, array);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			connection.close();
 		}
 		
-		RpcHelper.writeJSONArray(response, array);
+//		TicketMasterAPI ticketMasterAPI = new TicketMasterAPI();
+//		List<Item> items = ticketMasterAPI.search(lat, lon, keyWord);
+//		
+//		JSONArray array = new JSONArray();
+//		
+//		try {
+//			for (Item item : items) {
+//				JSONObject object = item.toJSONObject();
+//				array.put(object);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}	
 	}
 
 	/**

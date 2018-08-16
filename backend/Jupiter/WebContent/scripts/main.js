@@ -131,7 +131,7 @@
     function login() {
         var username = $('username').value;
         var password = $('password').value;
-//        password = md5(username + md5(password));
+        password = md5(username + md5(password));
         console.log(username + " " + password);
 
         // The request parameters

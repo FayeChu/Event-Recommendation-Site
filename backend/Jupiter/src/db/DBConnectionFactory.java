@@ -1,5 +1,7 @@
 package db;
 
+import db.mysql.MySQLConnection;
+
 public class DBConnectionFactory {
 	// This should change based on the pipeline.
 		private static final String DEFAULT_DB = "mysql";
@@ -8,8 +10,8 @@ public class DBConnectionFactory {
 			switch (db) {
 			case "mysql":
 				// Implemented DBConnection Interface
-				// return new MySQLConnection();
-				return null;
+				
+				return new MySQLConnection();
 			case "mongodb":
 				// Implemented DBConnection Interface
 				// return new MongoDBConnection();

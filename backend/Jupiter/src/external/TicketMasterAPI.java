@@ -145,11 +145,11 @@ public class TicketMasterAPI {
 							sBuilder.append(address.getString(LINE1));
 						}
 						if (!address.isNull(LINE2)) {
-							sBuilder.append("\n");
+							sBuilder.append('\n');
 							sBuilder.append(address.getString(LINE2));
 						}
 						if (!address.isNull(LINE3)) {
-							sBuilder.append("\n");
+							sBuilder.append('\n');
 							sBuilder.append(address.getString(LINE3));
 						}
 					}
@@ -158,7 +158,7 @@ public class TicketMasterAPI {
 						JSONObject city = venue.getJSONObject(CITY);
 						
 						if (!city.isNull(NAME)) {
-							sBuilder.append("\n");
+							sBuilder.append('\n');
 							sBuilder.append(city.getString(NAME));
 						}
 					}
