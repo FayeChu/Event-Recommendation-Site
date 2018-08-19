@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,10 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import db.DBConnection;
 import db.DBConnectionFactory;
+import entity.Item;
 
 /**
  * Servlet implementation class itemHistory
@@ -35,8 +38,25 @@ public class itemHistory extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String userId = request.getParameter("user_id");
+		JSONArray array = new JSONArray();
+
+		DBConnection conn = DBConnectionFactory.getConnection();
+		try {
+			Set<Item> items = conn.getFavoriteItems(userId);
+			for (Item item : items) {
+				JSONObject obj = item.toJSONObject();
+				obj.append("favorite", true);
+				array.put(obj);
+			}
+			
+			RpcHelper.writeJSONArray(response, array);	
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} finally {
+			conn.close();
+		}	
 	}
 
 	/**
@@ -55,7 +75,7 @@ public class itemHistory extends HttpServlet {
 			conn.setFavoriteItems(userId, itemIds);
 			RpcHelper.writeJSONObject(response, new JSONObject().put("result", "SUCCESS"));
 			
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
 		} finally {
 			conn.close();
@@ -78,7 +98,7 @@ public class itemHistory extends HttpServlet {
 			conn.unsetFavoriteItems(userId, itemIds);
 			RpcHelper.writeJSONObject(response, new JSONObject().put("result", "SUCCESS"));
 			
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
 		} finally {
 			conn.close();
