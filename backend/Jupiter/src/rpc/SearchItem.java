@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,19 +40,24 @@ public class SearchItem extends HttpServlet {
 	 */
     // http://localhost:8080/Jupiter/search?lat=37.38&lon=-122.08  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
-		
+		// Term can be empty or null
 		String term = request.getParameter("term");
+		String userId = request.getParameter("user_id");
 		
 		// Open db connection
 		DBConnection connection = DBConnectionFactory.getConnection();
 		try {
 			List<Item> items = connection.searchItems(lat, lon, term);
+			Set<String> favoriteItems = connection.getFavoriteItemIds(userId);
 			
 			JSONArray array = new JSONArray();
 			for (Item item : items) {
-				array.put(item.toJSONObject());
+				JSONObject obj = item.toJSONObject();
+				obj.put("favorite", favoriteItems.contains(item.getItemId()));
+				array.put(obj);
 			}
 			
 			RpcHelper.writeJSONArray(response, array);
@@ -61,20 +67,6 @@ public class SearchItem extends HttpServlet {
 		} finally {
 			connection.close();
 		}
-		
-//		TicketMasterAPI ticketMasterAPI = new TicketMasterAPI();
-//		List<Item> items = ticketMasterAPI.search(lat, lon, keyWord);
-//		
-//		JSONArray array = new JSONArray();
-//		
-//		try {
-//			for (Item item : items) {
-//				JSONObject object = item.toJSONObject();
-//				array.put(object);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}	
 	}
 
 	/**
