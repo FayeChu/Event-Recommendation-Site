@@ -106,8 +106,9 @@ ul {
   display: block;
 }
 
-#login-form input {
+#login-form input {	
   border: none;
+  display: block;
   margin-bottom: 10px;
   padding: 8px;
   width: 100%;
@@ -117,6 +118,7 @@ ul {
   cursor: pointer;
   float: right;
   padding: 8px 20px;
+  text-align: right;
 }
 
 #login-error {

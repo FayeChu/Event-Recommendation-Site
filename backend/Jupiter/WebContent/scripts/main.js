@@ -3,8 +3,8 @@
     /**
      * Variables
      */
-    var user_id = '1111';
-    var user_fullname = 'John';
+    var user_id = '';
+    var user_fullname = '';
     var lng = -122.08;
     var lat = 37.38;
 
@@ -17,11 +17,12 @@
         $('nearby-btn').addEventListener('click', loadNearbyItems);
         $('fav-btn').addEventListener('click', loadFavoriteItems);
         $('recommend-btn').addEventListener('click', loadRecommendedItems);
-
-//        var welcomeMsg = $('welcome-msg');
-//        welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
-//        initGeoLocation();
+        
         validateSession();
+        
+        var welcomeMsg = $('welcome-msg');
+        welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
+        initGeoLocation();
     }
     
     /**
@@ -29,8 +30,8 @@
      */
     function validateSession() {
         // The request parameters
-        var url = 'http://34.222.78.188/TitanAuth/login';
-        var req = JSON.stringify({});
+    	var url = './login';
+		var req = JSON.stringify({});
 
         // display loading message
         showLoadingMessage('Validating session...');
@@ -56,6 +57,7 @@
         var itemList = $('item-list');
         var avatar = $('avatar');
         var welcomeMsg = $('welcome-msg');
+        var logoutBtn = $('logout-link');
 
         welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
 
@@ -63,6 +65,7 @@
         showElement(itemList);
         showElement(avatar);
         showElement(welcomeMsg);
+        showElement(logoutBtn, 'inline-block');
         hideElement(loginForm);
 
         initGeoLocation();
@@ -74,12 +77,14 @@
         var itemList = $('item-list');
         var avatar = $('avatar');
         var welcomeMsg = $('welcome-msg');
+        var logoutBtn = $('logout-link');
 
         hideElement(itemNav);
         hideElement(itemList);
         hideElement(avatar);
+        hideElement(logoutBtn);
         hideElement(welcomeMsg);
-
+        
         showElement(loginForm);
     }
 
@@ -132,10 +137,10 @@
         var username = $('username').value;
         var password = $('password').value;
         password = md5(username + md5(password));
-        console.log(username + " " + password);
+        // console.log(username + " " + password);
 
         // The request parameters
-        var url = 'http://34.211.21.63/EventAuth/login';
+        var url = './login';
         var req = JSON.stringify({
             user_id : username,
             password : password,
@@ -260,10 +265,12 @@
 
         xhr.onload = function() {
         	if (xhr.status === 200) {
-        		callback(xhr.responseText);
-        	} else {
-        		errorHandler();
-        	}
+				callback(xhr.responseText);
+			} else if (xhr.status === 403) {
+				onSessionInvalid();
+			} else {
+				errorHandler();
+			}
         };
 
         xhr.onerror = function() {
